@@ -2,14 +2,15 @@
   "name": "scahrt",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/panierr.js",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup src/index.ts --dts",
+    "dev": "tsup src/index.ts --watch",
     "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Mangoose",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
