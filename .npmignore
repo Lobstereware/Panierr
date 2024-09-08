@@ -1,0 +1,6 @@
+/src
+/tests
+/public
+/node_modules
+/*.config.js
+/tsconfig.json

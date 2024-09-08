@@ -1,14 +1,28 @@
 {
-  "name": "scahrt",
+  "name": "panierr",
   "version": "0.0.1",
-  "description": "",
+  "description": "A flexible, event-driven shopping cart library for Sellista.",
   "main": "dist/panierr.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --dts",
     "dev": "tsup src/index.ts --watch",
     "clean": "rm -rf dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "shopping-cart",
+    "ecommerce",
+    "sellista",
+    "cart",
+    "widgets",
+    "webcomponents"
+  ],
   "author": "Mangoose",
   "license": "MIT",
   "devDependencies": {
@@ -17,5 +31,9 @@
     "ts-jest": "^29.2.5",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lobstereware/Panierr.git"
+}
 }

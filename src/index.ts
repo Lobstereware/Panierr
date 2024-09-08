@@ -1,3 +1,4 @@
 import Panierr from './ts/Panierr';
+import CartPreviewWidget from './ts/widgets/CartPreviewWidget';
 
-export default Panierr;
+export { Panierr, CartPreviewWidget };
