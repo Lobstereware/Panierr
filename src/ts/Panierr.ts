@@ -18,7 +18,8 @@ interface ShoppingCartConfig {
   onCartCleared: () => void;
   onDiscountApplied: (discount: number) => void;
   onInvalidDiscount: (code: string) => void;
-  widgets?: Array<any>; // Widgets to initialize
+  onError?: (message: string, details?: any) => void; // Optional error callback
+  widgets?: Array<any>;
 }
 
 type ShoppingCartEvent =
@@ -27,13 +28,15 @@ type ShoppingCartEvent =
   | 'itemUpdated'
   | 'cartCleared'
   | 'discountApplied'
-  | 'invalidDiscount';
+  | 'invalidDiscount'
+  | 'error'; // Added error event
 
 class Panierr {
   private cartItems: CartItem[] = [];
   private events: { [key in ShoppingCartEvent]?: Array<(data: any) => void> } = {};
   private discount: number = 0;
   private config: ShoppingCartConfig;
+  public widgets: any =  {};
 
   constructor(config: Partial<ShoppingCartConfig> = {}) {
     this.config = {
@@ -49,6 +52,7 @@ class Panierr {
       onCartCleared: () => {},
       onDiscountApplied: () => {},
       onInvalidDiscount: () => {},
+      onError: () => {}, // Default error handler does nothing
       ...config,
     };
 
@@ -63,6 +67,19 @@ class Panierr {
 
     if (this.config.widgets) {
       this.registerWidgets(this.config.widgets);
+    }
+  }
+
+  // Centralized error handling method
+  private handleError(message: string, details?: any): void {
+    console.error(`Panierr Error: ${message}`, details);
+    
+    // Emit error event
+    this.emit('error', { message, details });
+    
+    // Call onError callback if provided
+    if (this.config.onError) {
+      this.config.onError(message, details);
     }
   }
 
@@ -85,11 +102,20 @@ class Panierr {
 
   private getCartFromLocalStorage(): CartItem[] {
     const storedCart = localStorage.getItem('cartItems');
-    return storedCart ? JSON.parse(storedCart) : [];
+    try {
+      return storedCart ? JSON.parse(storedCart) : [];
+    } catch (error) {
+      this.handleError('Failed to parse cart data from localStorage', { error });
+      return [];
+    }
   }
 
   private saveCartToLocalStorage(): void {
-    localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+    try {
+      localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+    } catch (error) {
+      this.handleError('Failed to save cart data to localStorage', { error });
+    }
   }
 
   public addToCart(productElement: HTMLElement): void {
@@ -98,11 +124,16 @@ class Panierr {
     const itemPrice = productElement.getAttribute('data-item-price');
 
     if (!itemId || !itemName || !itemPrice) {
-      console.error("Invalid product attributes, can't add to cart");
+      this.handleError("Invalid product attributes, can't add to cart", { itemId, itemName, itemPrice });
       return;
     }
 
     const price = parseFloat(itemPrice);
+    if (isNaN(price) || price <= 0) {
+      this.handleError("Invalid product price", { itemId, itemName, itemPrice });
+      return;
+    }
+
     const existingItem = this.cartItems.find(item => item.id === itemId);
 
     if (existingItem) {
@@ -121,28 +152,43 @@ class Panierr {
   public removeFromCart(itemId: string): void {
     const removedItem = this.cartItems.find(item => item.id === itemId);
 
-    if (removedItem) {
-      this.cartItems = this.cartItems.filter(item => item.id !== itemId);
-      this.emit('itemRemoved', removedItem);
-      this.config.onItemRemoved(removedItem);
-      this.saveCartToLocalStorage();
-      this.renderCart();
+    if (!removedItem) {
+      this.handleError(`Item with ID ${itemId} not found in the cart`, { itemId });
+      return;
     }
+
+    this.cartItems = this.cartItems.filter(item => item.id !== itemId);
+    this.emit('itemRemoved', removedItem);
+    this.config.onItemRemoved(removedItem);
+    this.saveCartToLocalStorage();
+    this.renderCart();
   }
 
   public updateItemQuantity(itemId: string, newQuantity: number): void {
     const item = this.cartItems.find(item => item.id === itemId);
 
-    if (item && newQuantity > 0) {
-      item.quantity = newQuantity;
-      this.emit('itemUpdated', item);
-      this.config.onItemUpdated(item);
-      this.saveCartToLocalStorage();
-      this.renderCart();
+    if (!item) {
+      this.handleError(`Item with ID ${itemId} not found in the cart`, { itemId });
+      return;
     }
+
+    if (newQuantity <= 0) {
+      this.handleError('Quantity must be greater than zero', { itemId, newQuantity });
+      return;
+    }
+
+    item.quantity = newQuantity;
+    this.emit('itemUpdated', item);
+    this.config.onItemUpdated(item);
+    this.saveCartToLocalStorage();
+    this.renderCart();
   }
 
   public clearCart(): void {
+    if (this.cartItems.length === 0) {
+      this.handleError('Cart is already empty');
+      return;
+    }
     this.cartItems = [];
     this.emit('cartCleared', {});
     this.config.onCartCleared();
@@ -156,6 +202,7 @@ class Panierr {
       this.emit('discountApplied', this.discount);
       this.config.onDiscountApplied(this.discount);
     } else {
+      this.handleError('Invalid discount code', { code });
       this.emit('invalidDiscount', code);
       this.config.onInvalidDiscount(code);
     }
@@ -167,7 +214,11 @@ class Panierr {
       const cartSidebar = document.querySelector<HTMLElement>(this.config.sidebarSelector);
       if (cartSidebar) {
         cartSidebar.classList.toggle('open');
+      } else {
+        this.handleError('Cart sidebar not found', { selector: this.config.sidebarSelector });
       }
+    } else {
+      this.handleError('Sidebar is disabled or selector is invalid');
     }
   }
 
@@ -190,6 +241,8 @@ class Panierr {
         const productCard = button.closest('[data-product]');
         if (productCard) {
           this.addToCart(productCard as HTMLElement);
+        } else {
+          this.handleError('Product card not found for Add to Cart button');
         }
       });
     });
@@ -199,6 +252,8 @@ class Panierr {
     widgets.forEach(widget => {
       if (typeof widget.register === 'function') {
         widget.register(this);
+      } else {
+        this.handleError('Widget does not have a register method', { widget });
       }
     });
   }
@@ -210,7 +265,7 @@ class Panierr {
     return { totalPrice: totalPrice - discountAmount, totalItems, discountAmount };
   }
 
-  private renderCart(): void {
+  public renderCart(): void {
     const totalContainer = document.querySelector<HTMLElement>(this.config.cartTotalSelector);
     const cartCountContainer = document.querySelector<HTMLElement>(this.config.cartCountSelector);
     const cartItemsContainer = document.querySelector<HTMLElement>(this.config.cartItemsSelector);

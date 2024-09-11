@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+      "target": "ES2023",
+      "module": "ES2022",
+      "strict": true,
+      "esModuleInterop": true,
+      "outDir": "./dist",
+      "moduleResolution": "Bundler",
+      "allowJs": true,
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "baseUrl": "./src",
+      "paths": {
+        "~*": ["./*"]
+      },
+    },
+    "include": ["src"]
+  }

@@ -1,6 +1,6 @@
 {
   "name": "panierr",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A flexible, event-driven shopping cart library for Sellista.",
   "main": "dist/panierr.js",
   "module": "dist/index.mjs",

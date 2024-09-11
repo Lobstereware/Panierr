@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart</title>
+
+  <!-- Latest Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Styles for the Cart Page -->
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .cart-page {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 1rem 0;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item input {
+      width: 50px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 0.25rem;
+    }
+
+    .cart-item button {
+      background-color: #ff5f5f;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .cart-item button:hover {
+      background-color: #ff2d2d;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+
+    .checkout-btn {
+      background-color: #0070f3;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-size: 1.25rem;
+      text-align: center;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      width: 100%;
+    }
+
+    .checkout-btn:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="cart-page">
+    <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
+
+    <ul id="cart-items" class="mb-6"></ul>
+
+    <div class="cart-total">
+      <span>Total:</span>
+      <span id="cart-total">$0.00</span>
+    </div>
+
+    <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+  </div>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>

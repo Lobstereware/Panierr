@@ -1,301 +1,204 @@
 # Panierr - The Shopping Cart Library for [Sellista](https://sellista.shop)
 
-Panierr is a flexible, event-driven shopping cart library designed for seamless integration with the [Sellista](https://sellista.shop) platform. It provides features like adding, removing, updating items in the cart, and applying discounts. Panierr also supports extensibility through dynamic widget registration, allowing developers to easily enhance cart functionality and customize the user experience.
+Panierr is a lightweight, flexible, and event-driven shopping cart library designed for [Sellista](https://sellista.shop). It allows store owners to manage their shopping cart functionalities, such as adding/removing items, updating quantities, applying discounts, and more. It also supports widgets for easy integration into the UI.
 
 ## Features
 
-- **Add, Remove, Update Cart Items**
-- **Apply Discount Codes**
-- **Event-Driven Architecture**
-- **Cart Persistence via `localStorage`**
-- **Cart Sidebar Management**
-- **Dynamic Widget Registration**
-- **Customizable via CSS Variables**
-- **Support for Slots in Widgets**
-
-## About Sellista
-
-Sellista is an eCommerce platform designed to help businesses create beautiful online stores. Panierr is the ideal shopping cart solution for Sellista's dynamic storefronts. [Learn more about Sellista here](https://sellista.shop).
-
----
+- Add items to the cart
+- Remove items from the cart
+- Update item quantities
+- Apply discounts
+- Persist cart data using `localStorage`
+- Sidebar cart functionality (optional)
+- Event-driven design with custom event handlers
+- Widget system to extend the cart UI
 
 ## Installation
 
-You can install Panierr via npm:
+Install Panierr via npm for use within your Sellista project:
 
 ```bash
 npm install panierr
 ```
 
----
+## Usage with Sellista
 
-## Basic Usage
+Panierr integrates smoothly with Sellista's product structure. Here's how to initialize and use it in your Sellista-powered store.
 
 ### Import the Library
 
 ```typescript
 import Panierr from 'panierr';
-import CartPreviewWidget from './widgets/CartPreviewWidget';
 ```
 
 ### Initialize the Cart
 
+Set up the shopping cart for your Sellista store using the following configuration:
+
 ```typescript
 const cart = new Panierr({
-  cartTotalSelector: '#cart-total',
-  cartCountSelector: '#cart-count',
-  cartItemsSelector: '#cart-items',
-  cartSidebarTotalSelector: '#cart-sidebar-total',
-  sidebarEnabled: true,  // Enable the sidebar managed by the library
-  onItemAdded: (item) => console.log(`Item added: ${item.name}`),
-  onItemRemoved: (item) => console.log(`Item removed: ${item.name}`),
-  onItemUpdated: (item) => console.log(`Item updated: ${item.name}, quantity: ${item.quantity}`),
-  onCartCleared: () => console.log('Cart cleared'),
-  onDiscountApplied: (discount) => console.log(`Discount applied: ${discount}%`),
-  onInvalidDiscount: (code) => console.log(`Invalid discount code: ${code}`),
-  widgets: [CartPreviewWidget]  // Register widgets during initialization
+  cartTotalSelector: '#cart-total',                // Selector for cart total element
+  cartCountSelector: '#cart-count',                // Selector for cart item count element
+  cartItemsSelector: '#cart-items',                // Selector for cart items container
+  cartSidebarTotalSelector: '#cart-sidebar-total', // Selector for cart total in the sidebar
+  sidebarEnabled: true,                            // Enable/Disable sidebar handling
+  onItemAdded: (item) => {
+    console.log(`Item added to cart: ${item.name}`);
+  },
+  onItemRemoved: (item) => {
+    console.log(`Item removed from cart: ${item.name}`);
+  },
+  onItemUpdated: (item) => {
+    console.log(`Item quantity updated: ${item.name}, quantity: ${item.quantity}`);
+  },
+  onCartCleared: () => {
+    console.log('Cart has been cleared.');
+  },
+  onDiscountApplied: (discount) => {
+    console.log(`Discount applied: ${discount}%`);
+  },
+  onInvalidDiscount: (code) => {
+    console.log(`Invalid discount code: ${code}`);
+  },
+  widgets: [CartPreviewWidget] // Optional: Register widgets like CartPreviewWidget
 });
 ```
 
----
+### Adding Items to the Cart in Sellista
 
-### Adding Items to the Cart
-
-Use HTML `data-*` attributes to represent product information:
+Each product in Sellista uses standard HTML data attributes to store product information. Here's how to integrate Panierr to add items to the cart.
 
 ```html
-<div class="product-card" data-product data-item-id="product-1" data-item-name="Product 1" data-item-price="29.99">
-  <h3>Product 1</h3>
-  <p>$29.99</p>
-  <button data-add-to-cart>Add to Cart</button>
+<div class="product" data-product data-item-id="laptop-1" data-item-name="Laptop" data-item-price="1200">
+  <h3>Laptop</h3>
+  <p>Price: $1200.00</p>
+  <button class="add-to-cart">Add to Cart</button>
 </div>
+
+<script>
+  document.querySelectorAll('[data-add-to-cart]').forEach(button => {
+    button.addEventListener('click', () => {
+      const productElement = button.closest('[data-product]');
+      cart.addToCart(productElement);  // Add product to the cart
+    });
+  });
+</script>
 ```
-
-Panierr automatically binds the click event to elements with the `data-add-to-cart` attribute. When clicked, it adds the item to the cart based on the product attributes.
-
----
 
 ### Removing Items from the Cart
 
-For removing items, Panierr binds `data-item-id` to remove functionality:
+To remove an item, you can use the `data-item-id` attribute:
 
 ```html
-<button class="remove-from-cart" data-item-id="product-1">Remove</button>
+<button class="remove-from-cart" data-item-id="laptop-1">Remove</button>
+
+<script>
+  document.querySelectorAll('.remove-from-cart').forEach(button => {
+    button.addEventListener('click', () => {
+      const itemId = button.getAttribute('data-item-id');
+      cart.removeFromCart(itemId);  // Remove the item by ID
+    });
+  });
+</script>
 ```
-
-Panierr will automatically handle the removal logic based on the item ID.
-
----
 
 ### Updating Item Quantities
 
-You can enable quantity updates like this:
+Allow users to update item quantities within the cart:
 
 ```html
-<input type="number" class="update-quantity" value="1" data-item-id="product-1">
+<input class="update-quantity" type="number" value="1" data-item-id="laptop-1">
+
+<script>
+  document.querySelectorAll('.update-quantity').forEach(input => {
+    input.addEventListener('change', () => {
+      const itemId = input.getAttribute('data-item-id');
+      const newQuantity = parseInt(input.value);
+      cart.updateItemQuantity(itemId, newQuantity);  // Update quantity
+    });
+  });
+</script>
 ```
 
-Panierr updates the cart when the input value changes.
+### Clearing the Cart
 
----
-
-### Registering Widgets Dynamically
-
-Panierr allows developers to register custom widgets for the cart system:
+Clear the entire cart easily:
 
 ```typescript
-import CartPreviewWidget from './widgets/CartPreviewWidget';
-
-// You can register widgets dynamically after initialization
-cart.registerWidgets([CartPreviewWidget]);
+cart.clearCart();  // Clears all items from the cart
 ```
 
----
+### Applying Discounts
 
-### Example Widget: CartPreviewWidget
-
-Here's a sample widget that provides a preview of cart items:
+To apply discount codes:
 
 ```typescript
-class CartPreviewWidget extends HTMLElement {
-  private cart: any;
-
-  static register(cartInstance: any) {
-    if (!customElements.get('cart-preview-widget')) {
-      customElements.define('cart-preview-widget', CartPreviewWidget);
-    }
-    
-    const widget = document.querySelector('cart-preview-widget') as CartPreviewWidget;
-    widget.setCart(cartInstance);
-  }
-
-  setCart(cartInstance: any) {
-    this.cart = cartInstance;
-    this.attachCartEvents();
-    this.updateCartPreview();
-  }
-
-  connectedCallback() {
-    if (this.cart) {
-      this.render();
-      this.updateCartPreview();
-    }
-  }
-
-  private attachCartEvents() {
-    this.cart.on('itemAdded', () => this.updateCartPreview());
-    this.cart.on('itemRemoved', () => this.updateCartPreview());
-    this.cart.on('itemUpdated', () => this.updateCartPreview());
-    this.cart.on('cartCleared', () => this.updateCartPreview());
-  }
-
-  private updateCartPreview() {
-    const { totalItems, totalPrice } = this.cart.calculateTotals();
-    this.querySelector('.cart-preview-items')!.textContent = `${totalItems} items`;
-    this.querySelector('.cart-preview-total')!.textContent = `Total: $${totalPrice.toFixed(2)}`;
-  }
-
-  private render() {
-    this.innerHTML = `
-      <div class="cart-preview">
-        <h3>Cart Preview</h3>
-        <div class="cart-preview-items">0 items</div>
-        <div class="cart-preview-total">Total: $0.00</div>
-        <slot></slot> <!-- Allows for additional custom content -->
-      </div>
-    `;
-  }
-}
-
-export default CartPreviewWidget;
+cart.applyDiscount('SAVE10');  // Applies a 10% discount if the code is valid
 ```
 
-**Usage:**
+## Widgets System
 
-```html
-<cart-preview-widget>
-  <div class="extra-info">Free shipping on orders over $50!</div>
-</cart-preview-widget>
-```
+Panierr supports a widget system to extend the cart's UI, like the `CartPreviewWidget`. Widgets are defined as Web Components, and you can register them via the `widgets` array or using `cart.registerWidgets`.
 
-This widget will update dynamically whenever items are added/removed from the cart, and you can customize it using the `slot` feature.
-
----
-
-## CSS Customization
-
-You can customize widgets like `CartPreviewWidget` by using CSS variables:
-
-```css
-:root {
-  --cart-bg-color: white;
-  --cart-text-color: #2D3748;
-  --cart-button-bg: #3182CE;
-  --cart-button-hover-bg: #2B6CB0;
-}
-```
-
-If CSS variables are not defined, the widget falls back on default styles.
-
----
-
-## Event-Driven Architecture
-
-Panierr supports custom events that notify you when important changes occur in the cart. You can subscribe to events such as:
-
-- `itemAdded`
-- `itemRemoved`
-- `itemUpdated`
-- `cartCleared`
-- `discountApplied`
-- `invalidDiscount`
-
-**Example:**
+### Example Widget Usage:
 
 ```typescript
-cart.on('itemAdded', (item) => {
-  console.log(`Item added: ${item.name}`);
+import { Panierr, CartPreviewWidget } from 'panierr';
+
+const cart = new Panierr({
+  sidebarEnabled: true,
+  widgets: [CartPreviewWidget]
 });
 ```
 
----
-
-### Configuration Options
-
-Panierr provides a variety of configuration options to customize your shopping cart behavior. Here’s a breakdown of the available options:
+## Configuration Options
 
 | Option                       | Type                           | Default                   | Description |
 |------------------------------|--------------------------------|---------------------------|-------------|
-| `cartTotalSelector`           | `string`                       | `'#cart-total'`            | The CSS selector for the element displaying the total cart price. |
-| `cartCountSelector`           | `string`                       | `'#cart-count'`            | The CSS selector for the element showing the total number of items in the cart. |
-| `cartItemsSelector`           | `string`                       | `'#cart-items'`            | The CSS selector for the element where the list of cart items will be rendered. |
-| `cartSidebarTotalSelector`    | `string`                       | `'#cart-total-sidebar'`    | The CSS selector for displaying the total price in the cart sidebar (if enabled). |
+| `cartTotalSelector`           | `string`                       | `'#cart-total'`            | The CSS selector for the element displaying the cart total. |
+| `cartCountSelector`           | `string`                       | `'#cart-count'`            | The CSS selector for the element displaying the total item count. |
+| `cartItemsSelector`           | `string`                       | `'#cart-items'`            | The CSS selector for the container where cart items are rendered. |
+| `cartSidebarTotalSelector`    | `string`                       | `'#cart-sidebar-total'`    | The CSS selector for the sidebar displaying the cart total. |
 | `sidebarEnabled`              | `boolean`                      | `false`                    | Enables/disables the automatic handling of the cart sidebar. |
 | `sidebarSelector`             | `string`                       | `'.cart-sidebar'`          | The CSS selector for the sidebar that will display the cart. |
 | `onItemAdded`                 | `(item: CartItem) => void`     | `() => {}`                 | Callback triggered when an item is added to the cart. |
 | `onItemRemoved`               | `(item: CartItem) => void`     | `() => {}`                 | Callback triggered when an item is removed from the cart. |
-| `onItemUpdated`               | `(item: CartItem) => void`     | `() => {}`                 | Callback triggered when an item’s quantity is updated. |
+| `onItemUpdated`               | `(item: CartItem) => void`     | `() => {}`                 | Callback triggered when an item's quantity is updated. |
 | `onCartCleared`               | `() => void`                   | `() => {}`                 | Callback triggered when the cart is cleared. |
-| `onDiscountApplied`           | `(discount: number) => void`   | `() => {}`                 | Callback triggered when a valid discount is applied to the cart. |
+| `onDiscountApplied`           | `(discount: number) => void`   | `() => {}`                 | Callback triggered when a valid discount is applied. |
 | `onInvalidDiscount`           | `(code: string) => void`       | `() => {}`                 | Callback triggered when an invalid discount code is used. |
 | `widgets`                     | `Array<any>`                   | `[]`                       | An array of widgets to register. Widgets can be custom elements like the `CartPreviewWidget`. |
 
-### Example Configuration:
+## Contributing
+
+We welcome contributions to improve Panierr. You can add new features, fix bugs, or create new widgets that enhance the shopping experience. To create a custom widget, define a new class that extends `HTMLElement`, and register it using the `registerWidgets` method.
+
+### Creating Custom Widgets
+
+Here's an example of how you can create and register a custom widget:
 
 ```typescript
-const cart = new Panierr({
-  cartTotalSelector: '#cart-total',            // Element to display total price
-  cartCountSelector: '#cart-count',            // Element to display item count
-  cartItemsSelector: '#cart-items',            // Element to display list of cart items
-  cartSidebarTotalSelector: '#cart-sidebar-total', // Element to display total price in sidebar
-  sidebarEnabled: true,                        // Enable the cart sidebar
-  sidebarSelector: '.cart-sidebar',            // Define the sidebar element
-  onItemAdded: (item) => console.log(`Added: ${item.name}`),
-  onItemRemoved: (item) => console.log(`Removed: ${item.name}`),
-  onItemUpdated: (item) => console.log(`Updated: ${item.name}, quantity: ${item.quantity}`),
-  onCartCleared: () => console.log('Cart cleared'),
-  onDiscountApplied: (discount) => console.log(`Discount applied: ${discount}%`),
-  onInvalidDiscount: (code) => console.log(`Invalid discount code: ${code}`),
-  widgets: [CartPreviewWidget]  // Optional: Register widgets like CartPreviewWidget
-});
-```
-
-## Contributing: Adding New Widgets
-
-To contribute to Panierr by adding new widgets:
-
-1. **Create the Widget Class**: Ensure the widget follows the structure of `CartPreviewWidget`.
-2. **Register the Widget**: Widgets should be registered either during initialization or dynamically using `cart.registerWidgets()`.
-3. **Customize with Slots**: Make use of the `slot` functionality for added flexibility.
-4. **Style with CSS Variables**: Allow users to customize the widget by defining CSS variables in the widget’s stylesheet.
-
-Example contribution process:
-
-```typescript
-class NewWidget extends HTMLElement {
-  static register(cartInstance: any) {
-    if (!customElements.get('new-widget')) {
-      customElements.define('new-widget', NewWidget);
-    }
-
-    const widget = document.querySelector('new-widget') as NewWidget;
-    widget.setCart(cartInstance);
-  }
-
-  setCart(cartInstance: any) {
-    this.cart = cartInstance;
-    // Attach event handlers, etc.
+class MyCustomWidget extends HTMLElement {
+  constructor() {
+    super();
+    // Custom widget logic
   }
   
-  // ...additional widget logic...
+  static register(cartInstance: Panierr) {
+    customElements.define('my-custom-widget', MyCustomWidget);
+    const widget = new MyCustomWidget();
+    widget.setAttribute('cart', cartInstance);
+    document.body.appendChild(widget);
+  }
 }
-
-export default NewWidget;
 ```
-
----
 
 ## License
 
-Panierr is licensed under the MIT License. See the `LICENSE` file for details.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
+---
+
+## About Sellista
+
+[Panierr](https://sellista.shop) is part of the [Sellista](https://sellista.shop) ecosystem, an innovative platform designed to empower small businesses with customizable online stores. [Explore more features here](https://sellista.shop).

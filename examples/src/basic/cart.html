@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Modern E-Commerce Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f7f7f7;
+    }
+
+    .cart-sidebar {
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .cart-sidebar.open {
+      transform: translateX(0%);
+    }
+
+    /* Floating button hover effect */
+    #toggle-cart-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Product Card hover effect */
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Custom icon button styles */
+    .icon-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      border-radius: 50%;
+    }
+
+    /* Shopify-style heading */
+    h1, h2 {
+      color: #2c2c2c;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #737373;
+      margin-bottom: 20px;
+    }
+
+    .product-card {
+      border-radius: 12px;
+      background-color: white;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .product-card h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .product-card p {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    /* Button Styles for Cart and View buttons */
+    .icon-button,
+    .cart-button {
+      background-color: #f5f5f5;
+      transition: background-color 0.3s ease;
+    }
+
+    .icon-button:hover,
+    .cart-button:hover {
+      background-color: #e2e2e2;
+    }
+
+    .icon-button i, 
+    .cart-button i {
+      color: #333;
+      font-size: 1.25rem;
+    }
+
+    .cart-button {
+      background-color: #0070f3;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .cart-button:hover {
+      background-color: #005bb5;
+    }
+
+    /* Sidebar Styles */
+    .cart-sidebar {
+      border-left: 1px solid #e5e5e5;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .cart-sidebar h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .cart-sidebar ul {
+      padding: 0;
+    }
+
+    .cart-sidebar ul li {
+      font-size: 1rem;
+      color: #737373;
+    }
+
+    .cart-sidebar button {
+      background-color: #0070f3;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+    }
+
+    .cart-sidebar button:hover {
+      background-color: #005bb5;
+    }
+
+    .cart-sidebar input {
+      border: 1px solid #e5e5e5;
+      padding: 8px;
+      border-radius: 8px;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    #toggle-cart-btn {
+      border-radius: 50%;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Main Container -->
+  <div class="container mx-auto px-4 py-10">
+    <!-- Header -->
+    <header class="text-center mb-10">
+      <h1 class="text-4xl font-extrabold">Discover Our Exclusive Collection</h1>
+      <p class="text-lg">Best products curated for you</p>
+    </header>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Product 1 -->
+      <div
+        class="bg-white rounded-lg shadow-lg product-card p-6 text-center transition-transform duration-300 ease-in-out"
+        data-product data-item-id="product-1" data-item-name="Product 1" data-item-price="29.99">
+        <img src="https://via.placeholder.com/300" alt="Product 1" class="mx-auto mb-4 rounded-lg">
+        <h2 class="text-xl font-semibold">Product 1</h2>
+        <p>$29.99</p>
+        <div class="flex justify-center gap-3 mt-4">
+          <!-- View Product Button -->
+          <button class="icon-button hover:bg-gray-100 transition duration-200" aria-label="View Product">
+            <i class="fas fa-eye"></i>
+          </button>
+
+          <!-- Add to Cart Button -->
+          <button class="cart-button" data-add-to-cart aria-label="Add to Cart">
+            <i class="fas fa-cart-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div
+        class="bg-white rounded-lg shadow-lg product-card p-6 text-center transition-transform duration-300 ease-in-out"
+        data-product data-item-id="product-2" data-item-name="Product 2" data-item-price="49.99">
+        <img src="https://via.placeholder.com/300" alt="Product 2" class="mx-auto mb-4 rounded-lg">
+        <h2 class="text-xl font-semibold">Product 2</h2>
+        <p>$49.99</p>
+        <div class="flex justify-center gap-3 mt-4">
+          <button class="icon-button hover:bg-gray-100 transition duration-200" aria-label="View Product">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="cart-button" data-add-to-cart aria-label="Add to Cart">
+            <i class="fas fa-cart-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div
+        class="bg-white rounded-lg shadow-lg product-card p-6 text-center transition-transform duration-300 ease-in-out"
+        data-product data-item-id="product-3" data-item-name="Product 3" data-item-price="19.99">
+        <img src="https://via.placeholder.com/300" alt="Product 3" class="mx-auto mb-4 rounded-lg">
+        <h2 class="text-xl font-semibold">Product 3</h2>
+        <p>$19.99</p>
+        <div class="flex justify-center gap-3 mt-4">
+          <button class="icon-button hover:bg-gray-100 transition duration-200" aria-label="View Product">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="cart-button" data-add-to-cart aria-label="Add to Cart">
+            <i class="fas fa-cart-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Sidebar -->
+  <div class="cart-sidebar fixed right-0 top-0 w-80 h-full bg-white shadow-lg flex flex-col p-6">
+    <h2 class="text-2xl font-bold mb-4">Your Cart</h2>
+    <ul id="cart-items" class="flex-grow overflow-y-auto mb-4"></ul>
+    <p id="cart-total-sidebar" class="text-xl font-semibold mb-4">Total: $0.00</p>
+    <input type="text" id="discount-code" placeholder="Discount Code" class="w-full mb-2 px-3 py-2 border rounded">
+    <button id="apply-discount-btn"
+      class="w-full bg-green-500 text-white py-2 rounded mb-2 hover:bg-green-600 transition duration-200">Apply
+      Discount</button>
+    <button id="checkout-btn"
+      class="w-full bg-blue-600 text-white py-2 rounded mb-2 hover:bg-blue-700 transition duration-200">Checkout</button>
+    <button id="clear-cart-btn"
+      class="w-full bg-yellow-500 text-white py-2 rounded mb-2 hover:bg-yellow-600 transition duration-200">Clear
+      Cart</button>
+    <button id="close-cart-btn"
+      class="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition duration-200">Close Cart</button>
+  </div>
+
+  <!-- Floating Cart Button -->
+  <button id="toggle-cart-btn"
+    class="fixed bottom-5 right-5 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-transform duration-200">
+    <i class="fas fa-shopping-cart text-white text-xl"></i>
+  </button>
+
+  <!-- Cart Preview Widget -->
+  <cart-preview-widget heading-text="Your Cart" checkout-text="Buy Now" position="bottom-left" as-icon="false">
+    <div class="extra-content">Free shipping on orders over $50!</div>
+  </cart-preview-widget>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+
+</html>
