@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panierr - Lightweight & Modular Shopping Cart Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Layout */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        header {
+            background-color: #fff;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header .logo img {
+            height: 50px;
+            margin-right: 1rem;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3498db;
+        }
+
+        nav {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 1rem;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('https://via.placeholder.com/1200x400') no-repeat center center/cover;
+            color: #fff;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero a {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero a:hover {
+            background-color: #c0392b;
+        }
+
+        /* Sections */
+        section {
+            padding: 3rem 0;
+        }
+
+        section:nth-child(even) {
+            background-color: #fff;
+        }
+
+        section:nth-child(odd) {
+            background-color: #f1f1f1;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title h3 {
+            font-size: 2rem;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            font-size: 1rem;
+            color: #777;
+        }
+
+        .features-grid, .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature, .example {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature:hover, .example:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .feature h4, .example h4 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .feature p, .example p {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: #2d2d2d;
+            color: #ccc;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        code {
+            color: #e74c3c;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: #ecf0f1;
+            margin: 0 0.5rem;
+        }
+
+        footer a:hover {
+            color: #3498db;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            nav a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container logo">
+            <img src="https://via.placeholder.com/50" alt="Panierr Logo">
+            <h1>Panierr</h1>
+        </div>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#installation">Installation</a>
+            <a href="#usage">Usage</a>
+            <a href="#examples">Examples</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Build Powerful Shopping Carts with Ease</h2>
+            <p>Panierr is a lightweight and modular shopping cart library that simplifies eCommerce integration, offering both core cart functionalities and seamless DOM bindings to enhance your online store's user experience.</p>
+            <a href="#installation">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="container">
+            <div class="section-title">
+                <h3>Features</h3>
+                <p>Explore what Panierr has to offer</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature">
+                    <h4>Modular Design</h4>
+                    <p>Use <strong>PanierrCore</strong> for backend cart logic and <strong>PanierrDOM</strong> for frontend integration.</p>
+                </div>
+                <div class="feature">
+                    <h4>Discount Support</h4>
+                    <p>Apply both percentage-based and fixed-amount discounts effortlessly.</p>
+                </div>
+                <div class="feature">
+                    <h4>Customizable Storage</h4>
+                    <p>Configure storage options like <code>localStorage</code> to suit your needs.</p>
+                </div>
+                <div class="feature">
+                    <h4>Locale & Currency Formatting</h4>
+                    <p>Support multiple locales and currency formats for global applications.</p>
+                </div>
+                <div class="feature">
+                    <h4>Event-Driven</h4>
+                    <p>Listen to cart events (e.g., item added, cart cleared) for custom behaviors and analytics.</p>
+                </div>
+                <div class="feature">
+                    <h4>Easy Integration</h4>
+                    <p>Bind cart actions to DOM elements effortlessly with intuitive data attributes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation">
+        <div class="container">
+            <div class="section-title">
+                <h3>Installation</h3>
+                <p>Get Panierr up and running in your project</p>
+            </div>
+            <div>
+                <h4>Via npm</h4>
+                <pre><code>npm install panierr</code></pre>
+                <h4>Via CDN</h4>
+                <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/panierr/dist/panierr.min.js"&gt;&lt;/script&gt;</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage Section -->
+    <section id="usage">
+        <div class="container">
+            <div class="section-title">
+                <h3>Getting Started</h3>
+                <p>Learn how to integrate Panierr into your project</p>
+            </div>
+
+            <div>
+                <h4>PanierrCore</h4>
+                <pre><code>import PanierrCore from 'panierr';
+
+const cart = new PanierrCore({
+    autoSave: true,
+    discounts: [
+        { code: 'SAVE10', type: 'percentage', amount: 10 },
+        { code: 'FLAT5', type: 'fixed', amount: 5 }
+    ],
+    currencyFormat: { style: 'currency', currency: 'USD' },
+    locale: 'en-US'
+});
+
+// Add an item
+cart.addItem({
+    id: '1',
+    name: 'Product 1',
+    price: 29.99,
+    quantity: 1
+});
+
+// Apply a discount
+cart.applyDiscount('SAVE10');
+
+// Get totals
+const totals = cart.calculateTotals();
+console.log(totals.finalPrice); // Final price after discount
+</code></pre>
+            </div>
+
+            <div>
+                <h4>PanierrDOM</h4>
+                <pre><code>import PanierrDOM from 'panierr/dom';
+
+const panierrDOM = new PanierrDOM({
+    cart: new PanierrCore(),
+    currencyFormat: { style: 'currency', currency: 'USD' },
+    locale: 'en-US'
+});
+
+// Initialize and render the cart
+panierrDOM.renderCart();
+</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="examples">
+        <div class="container">
+            <div class="section-title">
+                <h3>Examples</h3>
+                <p>See Panierr in action</p>
+            </div>
+            <div class="examples-grid">
+                <div class="example">
+                    <h4>Basic Usage</h4>
+                    <p>Integrate PanierrCore and PanierrDOM to manage your shopping cart seamlessly.</p>
+                    <pre><code>import PanierrCore from 'panierr';
+import PanierrDOM from 'panierr/dom';
+
+const cart = new PanierrCore({
+    discounts: [{ code: 'SAVE10', type: 'percentage', amount: 10 }]
+});
+
+const panierrDOM = new PanierrDOM({
+    cart,
+    currencyFormat: { style: 'currency', currency: 'USD' },
+    locale: 'en-US'
+});
+
+// Add an item programmatically
+cart.addItem({
+    id: '2',
+    name: 'Product 2',
+    price: 49.99,
+    quantity: 2
+});
+
+// Render the cart
+panierrDOM.renderCart();
+</code></pre>
+                </div>
+                <div class="example">
+                    <h4>Handling Events</h4>
+                    <p>Listen to cart events to trigger custom behaviors.</p>
+                    <pre><code>cart.on('itemAdded', (event) => {
+    console.log('Item added:', event.item);
+});
+
+cart.on('discountApplied', (event) => {
+    console.log('Discount applied:', event.discount);
+});
+</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h3>Contact</h3>
+                <p>We'd love to hear from you!</p>
+            </div>
+            <p>If you have any questions, feedback, or suggestions, feel free to open an issue on our <a href="https://github.com/your-repo/panierr" target="_blank">GitHub repository</a> or reach out directly.</p>
+            <p>Follow us on <a href="https://twitter.com/yourprofile" target="_blank">Twitter</a> for updates.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Panierr. All rights reserved.</p>
+            <p>
+                <a href="https://github.com/your-repo/panierr" target="_blank">GitHub</a> |
+                <a href="https://twitter.com/yourprofile" target="_blank">Twitter</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
