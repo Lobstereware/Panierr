@@ -1,5 +1,4 @@
-import Panierr from './ts/Panierr';
-import CartPreviewWidget from './ts/widgets/CartPreviewWidget';
-import CheckoutModalWidget from './ts/widgets/CheckoutModal';
+import PanierrDOM from './ts/Panierr-dom';
+import PanierrCore from './ts/PanerrCore';
 
-export { Panierr, CartPreviewWidget, CheckoutModalWidget };
+export { PanierrCore, PanierrDOM };

@@ -3,73 +3,106 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panierr Demo</title>
-
-  <!-- Tailwind CSS for quick styling -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts for a modern look -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f8f9fa;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-    }
-
-    ul {
-      list-style-type: none;
-    }
-
-    li {
-      margin-bottom: 1rem;
-    }
-
-    a {
-      font-weight: 600;
-    }
-
-    a:hover {
-      color: #0070f3;
-    }
-  </style>
+  <title>Fancy E-commerce Store</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body>
 
-  <div class="bg-white p-8 rounded-lg shadow-lg w-4/5 max-w-lg text-center">
-    <h1 class="text-4xl text-gray-800 mb-6">Panierr Demo</h1>
-    <p class="text-lg text-gray-600 mb-8">Explore different ways to use the Panierr library in your e-commerce project.</p>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>FancyStore</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li>
+            <a href="#" data-action="toggle-cart">
+              <i class="fas fa-shopping-cart"></i>
+              <span data-cart-count>0</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <ul class="text-left">
-      <li>
-        <a href="./checkout/checkout.html" class="text-blue-600 hover:underline">
-          Checkout Flow
-        </a>
-        <p class="text-sm text-gray-500">A complete example of a checkout process using Panierr and Stripe integration.</p>
-      </li>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h2>Welcome to FancyStore</h2>
+      <p>Your one-stop shop for the latest fashion trends.</p>
+      <a href="#" class="btn">Shop Now</a>
+    </div>
+  </section>
 
-      <li>
-        <a href="./basic/cart.html" class="text-blue-600 hover:underline">
-          Shopping
-        </a>
-        <p class="text-sm text-gray-500">Demonstrates how to implement a simple cart using Panierr with basic add/remove functionality.</p>
-      </li>
+  <!-- Product Listing -->
+  <section class="products">
+    <div class="container">
+      <h2>Featured Products</h2>
+      <div class="product-grid">
 
-      <li>
-        <a href="./cart/cart.html" class="text-blue-600 hover:underline">
-          Your Cart
-        </a>
-        <p class="text-sm text-gray-500">Explore a more advanced cart page with quantity updates, discount codes, and more features.</p>
-      </li>
-    </ul>
-  </div>
+        <!-- Product Card -->
+        <div class="product-card">
+          <img src="https://cdn02.outlet46.de/item/images/213438/full/1047789-Turkis.jpg" alt="Product 1">
+          <h3>Stylish Sneakers</h3>
+          <p class="price">$79.99</p>
+          <button data-action="add-to-cart" data-item-id="prod-001" data-item-name="Stylish Sneakers"
+            data-item-price="79.99" class="btn add-to-cart-btn">
+            Add to Cart
+          </button>
+        </div>
+
+        <!-- Product Card -->
+        <div class="product-card">
+          <img src="https://toughees.co.za/cdn/shop/files/4116007_1_164f3315-ee50-442d-ad06-122e983724bd.jpg?v=1690971084" alt="Product 1">
+          <h3>Black Sneakers</h3>
+          <p class="price">$179.99</p>
+          <button data-action="add-to-cart" data-item-id="prod-002" data-item-name="Black Sneakers"
+            data-item-price="179.99" class="btn add-to-cart-btn">
+            Add to Cart
+          </button>
+        </div>
+        <!-- Repeat for other products -->
+        <!-- ... -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Cart Sidebar -->
+  <aside id="cart-sidebar">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button data-action="toggle-cart" class="close-cart-btn">&times;</button>
+    </div>
+    <div class="cart-content">
+      <div data-cart-items></div>
+    </div>
+    <div class="cart-footer">
+      <p>Subtotal: <span data-cart-total>$0.00</span></p>
+      <button class="btn checkout-btn">Proceed to Checkout</button>
+    </div>
+  </aside>
+
+  <!-- Overlay -->
+  <div id="overlay" data-action="toggle-cart"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 FancyStore. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="main.ts"></script>
 
 </body>
 

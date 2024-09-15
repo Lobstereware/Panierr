@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@stripe/stripe-js": "^4.4.0"
   },
   "devDependencies": {
     "live-server": "^1.2.2",
