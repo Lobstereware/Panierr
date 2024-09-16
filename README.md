@@ -69,7 +69,7 @@ interface PanierrConfig {
 ### Example Usage
 
 ```ts
-import PanierrCore from 'panierr';
+import { PanierrCore } from 'panierr';
 
 const cart = new PanierrCore({
     autoSave: true,
@@ -109,7 +109,7 @@ PanierrDOM extends PanierrCore to the DOM, making it easier to handle user inter
 ### Initialization
 
 ```ts
-import PanierrDOM from 'panierr/dom';
+import { PanierrDOM } from 'panierr';
 
 const panierrDOM = new PanierrDOM({
     currencyFormat: { style: 'currency', currency: 'USD' },
